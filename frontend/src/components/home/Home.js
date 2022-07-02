@@ -43,9 +43,11 @@ const coins = {
 
 export const Home = () => {
 
-    const [bitcoin, setBitcoin] = useState(0);
-    const [ethereum, setEthereum] = useState(0);
+    const [bitcoinPrice, setBitcoinPrice] = useState(0);
+    const [ethereumPrice, setEthereumPrice] = useState(0);
 
+    const [bitcoinHistory, setBitcoinHistory] = useState([]);
+    const [ethereumHistory, setEthereumHistory] = useState([]);
 
     useEffect(() => {
 
@@ -55,23 +57,19 @@ export const Home = () => {
             responseType: 'json',
             responseEncoding: 'utf8',
             headers: {
-                'Authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhlbG11dC5uYUBnbWFpbC5jb20iLCJuYW1lIjoiSGVsbXV0IE5hamFycm8iLCJpYXQiOjE2NTY3MzY4MjYsImV4cCI6MTY1Njc0MDQyNn0.HHkm4oJFtJz0zB6PC7vmIt6sh2O7fME2opTlEQ2AhxY"
+                'Authorization': Cookies.get("token")
             }
         })
             .then((res) => {
-                if (res.status === 200) {
-                    setBitcoin(Math.round(parseInt(res.data.response[0][2])))
-                }
-                else {
-
-                }
+                if (res.status === 200) setBitcoinPrice(parseFloat(res.data.response[0][2]).toFixed(4))
+                else window.location.replace('/sign-in')
             })
             .catch((err) => {
-
+                window.location.replace('/sign-in')
+                //console.log(err)
             })
 
-
-    }, [bitcoin]);
+    }, [bitcoinPrice])
 
 
     useEffect(() => {
@@ -82,24 +80,73 @@ export const Home = () => {
             responseType: 'json',
             responseEncoding: 'utf8',
             headers: {
-                'Authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhlbG11dC5uYUBnbWFpbC5jb20iLCJuYW1lIjoiSGVsbXV0IE5hamFycm8iLCJpYXQiOjE2NTY3MzY4MjYsImV4cCI6MTY1Njc0MDQyNn0.HHkm4oJFtJz0zB6PC7vmIt6sh2O7fME2opTlEQ2AhxY"
+                'Authorization': Cookies.get("token")
             }
         })
             .then((res) => {
-                if (res.status === 200) {
-                    setEthereum(Math.round(parseInt(res.data.response[0][2])))
-                }
-                else {
-
-                }
-
+                if (res.status === 200) setEthereumPrice(parseFloat(res.data.response[0][2]).toFixed(4))
+                else window.location.replace('/sign-in')
             })
             .catch((err) => {
-                console.log(err)
+                window.location.replace('/sign-in')
+                //console.log(err)
             })
 
-    }, [ethereum]);
+    }, [ethereumPrice])
 
+
+    const insertHistory = (coin) => {
+        axios({
+            method: 'get',
+            url: `${API}/${coin}`,
+            responseType: 'json',
+            responseEncoding: 'utf8',
+            headers: {
+                'Authorization': Cookies.get("token")
+            }
+        })
+            .then((res) => {
+
+                if (res.status === 200) {
+
+                    if (coin === 'bitcoin') {
+
+                        let temp = bitcoinHistory
+
+                        if (temp.length > 7) temp.shift(); temp.shift();
+                        temp.push(parseFloat(res.data.response[0][2]).toFixed(4))
+                        temp.push(parseFloat(res.data.response[0][3]).toFixed(4))
+
+                        setBitcoinHistory(temp)
+                    }
+                    else {
+
+                        let temp = ethereumHistory
+
+                        if (temp.length > 7) temp.shift(); temp.shift();
+                        temp.push(parseFloat(res.data.response[0][2]).toFixed(4))
+                        temp.push(parseFloat(res.data.response[0][3]).toFixed(4))
+
+                        setEthereumHistory(temp)
+                    }
+                }
+                else window.location.replace('/sign-in')
+            })
+            .catch((err) => {
+                window.location.replace('/sign-in')
+                //console.log(err)
+            })
+    }
+
+    useEffect(() => {
+        const timerBc = setInterval(() => insertHistory('bitcoin'), 2 * 1000);
+        const timerEt = setInterval(() => insertHistory('ethereum'), 2 * 1000);
+
+        return function cleanup() {
+            clearInterval(timerBc);
+            clearInterval(timerEt);
+        };
+    }, []);
 
 
     return (
@@ -114,7 +161,7 @@ export const Home = () => {
             >
                 <Toolbar sx={{ flexWrap: 'wrap' }}>
                     <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-                        Company name
+                        Cryptocurrency
                     </Typography>
                     <nav>
                         <Link
@@ -123,7 +170,7 @@ export const Home = () => {
                             href="#"
                             sx={{ my: 1, mx: 1.5 }}
                         >
-                            Features
+
                         </Link>
                         <Link
                             variant="button"
@@ -131,7 +178,7 @@ export const Home = () => {
                             href="#"
                             sx={{ my: 1, mx: 1.5 }}
                         >
-                            Enterprise
+
                         </Link>
                         <Link
                             variant="button"
@@ -139,11 +186,11 @@ export const Home = () => {
                             href="#"
                             sx={{ my: 1, mx: 1.5 }}
                         >
-                            Support
+
                         </Link>
                     </nav>
-                    <Button href="#" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-                        Login
+                    <Button href="#" variant="outlined" sx={{ my: 1, mx: 1.5 }} onClick={() => { Cookies.remove('token'); window.location.replace('/sign-in') }} >
+                        Log-Out
                     </Button>
                 </Toolbar>
             </AppBar>
@@ -172,11 +219,9 @@ export const Home = () => {
                                 Pricing History
                             </Typography>
 
-
                             <Lineal
-                                key={Math.random()}
-                                bitcoinData={[1, 2, 3, 4, 5]}
-                                ethereumData={[5, 4, 3, 2, 1]}
+                                bitcoin={bitcoinHistory}
+                                ethereum={ethereumHistory}
                                 height={window.screen.height * 0.6}
                                 width={window.screen.width * 0.50} >
                             </Lineal>
@@ -206,17 +251,15 @@ export const Home = () => {
                                     Pricing
                                 </Typography>
                                 <Typography variant="h5" align="center" color="text.secondary" component="p">
-                                    Quickly build an effective pricing table for your potential customers with
-                                    this layout. It&apos;s built with default MUI components with little
-                                    customization.
+                                    A cryptocurrency is a digital currency, which is an alternative form of payment created using encryption algorithms.
                                 </Typography>
                             </Container>
                             {/* End hero unit */}
 
                             <Container maxWidth="md" component="main">
                                 <Grid container spacing={4} alignItems="center">
-                                    <Coin tier={coins.bitcoin} price={bitcoin} />
-                                    <Coin tier={coins.ethereum} price={ethereum} />
+                                    <Coin tier={coins.bitcoin} price={bitcoinPrice} />
+                                    <Coin tier={coins.ethereum} price={ethereumPrice} />
                                 </Grid>
                             </Container>
                         </Box>
@@ -230,6 +273,6 @@ export const Home = () => {
 
             <CopyRight />
 
-        </Fragment>
+        </Fragment >
     );
 }

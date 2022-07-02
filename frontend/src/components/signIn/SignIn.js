@@ -14,6 +14,8 @@ import { authenticate } from '../../services/users';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../reducers/userReducer';
+import Cookies from 'js-cookie';
+
 
 export function SignIn() {
 
@@ -30,18 +32,20 @@ export function SignIn() {
         await authenticate({
             email: data.get('email'),
             password: data.get('password'),
-        }).then((res) => {
-            dispatch(login(res.response))
-
-        }).catch((err) => {
-
-            setAlert({
-                severity: 'error',
-                caption: 'Password or Email Incorrect'
-            })
-            setShowAlert(true)
         })
+            .then((res) => {
+                dispatch(login(res.response))
+                Cookies.set('token', res.response.response, { secure: true, expires: 1, sameSite: 'strict' })
+                window.location.replace('/')
+            })
+            .catch((err) => {
 
+                setAlert({
+                    severity: 'error',
+                    caption: 'Password or Email Incorrect'
+                })
+                setShowAlert(true)
+            })
     };
 
 

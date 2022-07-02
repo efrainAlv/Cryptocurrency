@@ -15,19 +15,20 @@ import { ThemeProvider } from '@mui/material/styles';
 
 // ============================================== IMPORTS ==============================================
 import { dark } from '../../themes';
-import { register } from '../../services/users'
-import { registerUser } from '../../reducers/userReducer';
-import { useDispatch } from 'react-redux';
+//import { register } from '../../services/users'
+//import { registerUser } from '../../reducers/userReducer';
+//import { useDispatch } from 'react-redux';
 import { Fragment, useState } from 'react';
 import { ActionAlerts } from '../Alert';
 import { CopyRight } from '../Copyright';
 import axios from 'axios';
 import { API } from '../../services/users';
-
+import { useHistory } from 'react-router-dom';
 
 export default function SignUp() {
 
-    const dispatch = useDispatch();
+    //const dispatch = useDispatch();
+    const history = useHistory();
 
     const [showAlert, setShowAlert] = useState(false);
     const [alert, setAlert] = useState({ caption: '', severity: 'info' })
@@ -59,7 +60,7 @@ export default function SignUp() {
                         caption: 'Registered successfully!'
                     })
                     setShowAlert(true)
-                    window.location.replace('/sign-in')
+                    history.push('sign-in')
                 }
                 else {
                     setAlert({
@@ -153,7 +154,7 @@ export default function SignUp() {
                             </Button>
                             <Grid container justifyContent="center">
                                 <Grid item>
-                                    <Link href="/sign-in" variant="body2">
+                                    <Link sx={{ cursor: "pointer" }} variant="body2" onClick={() => history.push('sign-in')}>
                                         Already have an account? Sign in
                                     </Link>
                                 </Grid>

@@ -20,8 +20,9 @@ import { Lineal } from '../charts/Lineal';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { userReducer } from '../../reducers/userReducer';
-
+//import { userReducer } from '../../reducers/userReducer';
+import { useHistory } from 'react-router-dom';
+import ClipLoader from "react-spinners/ClipLoader";
 
 import { API } from '../../services/users';
 
@@ -47,11 +48,15 @@ const coins = {
 
 export const Home = () => {
 
+    const history = useHistory();
+
     const [bitcoinPrice, setBitcoinPrice] = useState(0);
     const [ethereumPrice, setEthereumPrice] = useState(0);
 
     const [bitcoinHistory, setBitcoinHistory] = useState([]);
     const [ethereumHistory, setEthereumHistory] = useState([]);
+
+    const [logged, setLogged] = useState(false);
 
     useEffect(() => {
 
@@ -66,11 +71,14 @@ export const Home = () => {
             }
         })
             .then((res) => {
-                if (res.status === 200) setBitcoinPrice(parseFloat(res.data.response[0][2]).toFixed(4))
-                else window.location.replace('/sign-in')
+                if (res.status === 200) {
+                    setBitcoinPrice(parseFloat(res.data.response[0][2]).toFixed(4))
+                    setLogged(true)
+                }
+                else history.push('/sign-in')
             })
             .catch((err) => {
-                window.location.replace('/sign-in')
+                history.push('/sign-in')
                 //console.log(err)
             })
 
@@ -90,11 +98,14 @@ export const Home = () => {
             }
         })
             .then((res) => {
-                if (res.status === 200) setEthereumPrice(parseFloat(res.data.response[0][2]).toFixed(4))
-                else window.location.replace('/sign-in')
+                if (res.status === 200) {
+                    setEthereumPrice(parseFloat(res.data.response[0][2]).toFixed(4))
+                    setLogged(true)
+                }
+                else history.push('/sign-in')
             })
             .catch((err) => {
-                window.location.replace('/sign-in')
+                history.push('/sign-in')
                 //console.log(err)
             })
 
@@ -139,10 +150,10 @@ export const Home = () => {
                         setEthereumPrice(res.data.response[0][2])
                     }
                 }
-                else window.location.replace('/sign-in')
+                else history.push('/sign-in')
             })
             .catch((err) => {
-                window.location.replace('/sign-in')
+                history.push('/sign-in')
                 //console.log(err)
             })
     }
@@ -158,7 +169,9 @@ export const Home = () => {
 
     }, []);
 
+
     return (
+
         <Fragment>
             <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
             <CssBaseline />
@@ -198,7 +211,7 @@ export const Home = () => {
 
                         </Link>
                     </nav>
-                    <Button href="#" variant="outlined" sx={{ my: 1, mx: 1.5 }} onClick={() => { Cookies.remove('token'); window.location.replace('/sign-in') }} >
+                    <Button href="#" variant="outlined" sx={{ my: 1, mx: 1.5 }} onClick={() => { Cookies.remove('token'); history.push('/sign-in') }} >
                         Log-Out
                     </Button>
                 </Toolbar>
@@ -209,73 +222,87 @@ export const Home = () => {
 
 
             <ThemeProvider theme={dark}>
-                <Grid container component="main" sx={{ height: '100vh' }}>
-                    <CssBaseline />
-                    <Grid
-                        item
-                        xs={false}
-                        sm={4}
-                        md={7}
-                    >
-                        <Box sx={{ padding: 5, marginTop: 2 }}>
-                            <Typography
-                                component="h1"
-                                variant="h2"
-                                align="center"
-                                color="text.primary"
-                                gutterBottom
+                {
+                    logged ?
+                        <Grid container component="main" sx={{ height: '100vh' }}>
+                            <CssBaseline />
+                            <Grid
+                                item
+                                xs={false}
+                                sm={4}
+                                md={7}
                             >
-                                Pricing History
-                            </Typography>
+                                <Box sx={{ padding: 5, marginTop: 2 }}>
+                                    <Typography
+                                        component="h1"
+                                        variant="h2"
+                                        align="center"
+                                        color="text.primary"
+                                        gutterBottom
+                                    >
+                                        Pricing History
+                                    </Typography>
 
-                            <Lineal
-                                //key={Math.random()}
-                                bitcoin={bitcoinHistory}
-                                ethereum={ethereumHistory}
-                                height={window.screen.height * 0.6}
-                                width={window.screen.width * 0.50} >
-                            </Lineal>
+                                    <Lineal
+                                        //key={Math.random()}
+                                        bitcoin={bitcoinHistory}
+                                        ethereum={ethereumHistory}
+                                        height={window.screen.height * 0.6}
+                                        width={window.screen.width * 0.50} >
+                                    </Lineal>
 
-                        </Box>
-                    </Grid>
+                                </Box>
+                            </Grid>
 
 
-                    <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                        <Box
-                            sx={{
-                                my: 8,
-                                mx: 4,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
-                                <Typography
-                                    component="h1"
-                                    variant="h2"
-                                    align="center"
-                                    color="text.primary"
-                                    gutterBottom
+                            <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                                <Box
+                                    sx={{
+                                        my: 8,
+                                        mx: 4,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                    }}
                                 >
-                                    Pricing
-                                </Typography>
-                                <Typography variant="h5" align="center" color="text.secondary" component="p">
-                                    A cryptocurrency is a digital currency, which is an alternative form of payment created using encryption algorithms.
-                                </Typography>
-                            </Container>
-                            {/* End hero unit */}
+                                    <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
+                                        <Typography
+                                            component="h1"
+                                            variant="h2"
+                                            align="center"
+                                            color="text.primary"
+                                            gutterBottom
+                                        >
+                                            Pricing
+                                        </Typography>
+                                        <Typography variant="h5" align="center" color="text.secondary" component="p">
+                                            A cryptocurrency is a digital currency, which is an alternative form of payment created using encryption algorithms.
+                                        </Typography>
+                                    </Container>
+                                    {/* End hero unit */}
 
-                            <Container maxWidth="md" component="main">
-                                <Grid container spacing={4} alignItems="center">
-                                    <Coin tier={coins.bitcoin} price={bitcoinPrice} />
-                                    <Coin tier={coins.ethereum} price={ethereumPrice} />
-                                </Grid>
-                            </Container>
+                                    <Container maxWidth="md" component="main">
+                                        <Grid container spacing={4} alignItems="center">
+                                            <Coin tier={coins.bitcoin} price={bitcoinPrice} />
+                                            <Coin tier={coins.ethereum} price={ethereumPrice} />
+                                        </Grid>
+                                    </Container>
+                                </Box>
+                            </Grid>
+
+                        </Grid>
+                        :
+                        <Box sx={{ margin: 5, marginTop: 20 }}>
+                            <Typography variant="h2" color="inherit" noWrap sx={{ flexGrow: 1, alignContent: "center", textAlign: "center" }} >
+                                Loading ...
+                            </Typography>
+                            <ClipLoader color={"red"} loading={true} cssOverride={{
+                                display: "block",
+                                margin: "0 auto",
+                                borderColor: "red",
+                            }} size={150} />
                         </Box>
-                    </Grid>
-
-                </Grid>
+                }
             </ThemeProvider>
 
 

@@ -2,6 +2,12 @@
 
 Esta aplicación se desarrolló con el proposito de gestionar usuarios (agregar y autenticar) para que sean capacer de ver los precios actuales de las criptomonedas **BitCoin** y **Ethereum** en dolares. Esta aplicacion cuenta con 3 pantallas que son las siguientes:
 
+### [Backend - Digital Ocean](https://walrus-app-wuu3q.ondigitalocean.app/)
+
+### [Frontend - Firebase Hosting](https://cryptocurrency-db260.web.app/)
+
+---
+
 ## Tecnología utilizadas
 
 ### Frontend

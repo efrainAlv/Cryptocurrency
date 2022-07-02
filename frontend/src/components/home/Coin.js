@@ -58,7 +58,7 @@ export const Coin = ({ tier, price }) => {
                                 alignItems="center"
                                 justifyContent="center"
                             >
-                                <img src={tier.image} width={tier.title === "Ethereum" ? "32%" : "50%"} />
+                                <img alt="alt" src={tier.image} width={tier.title === "Ethereum" ? "32%" : "50%"} />
                             </Box>
                         </ul>
                     </CardContent>

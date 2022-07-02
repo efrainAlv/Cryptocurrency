@@ -10,7 +10,7 @@ import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-
+import { useHistory } from 'react-router-dom';
 
 // ============================================== IMPORTS ==============================================
 import { Fragment } from "react"
@@ -19,6 +19,8 @@ import { CopyRight } from '../Copyright';
 
 
 export const FormSignIn = ({ handleSubmit, onClose, caption, severity, showAlert }) => {
+
+    const history = useHistory();
 
     return (
         <Fragment>
@@ -62,13 +64,8 @@ export const FormSignIn = ({ handleSubmit, onClose, caption, severity, showAlert
                     Sign In
                 </Button>
                 <Grid container>
-                    <Grid item xs>
-                        <Link href="#" variant="body2">
-                            Forgot password?
-                        </Link>
-                    </Grid>
                     <Grid item>
-                        <Link href="#" variant="body2">
+                        <Link sx={{ cursor: "pointer" }} variant="body2" onClick={() => history.push('sign-up')}>
                             {"Don't have an account? Sign Up"}
                         </Link>
                     </Grid>

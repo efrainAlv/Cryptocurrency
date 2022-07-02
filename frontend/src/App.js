@@ -1,7 +1,7 @@
 import {
   BrowserRouter as Router,
   Route,
-  Routes
+  Switch
 } from "react-router-dom";
 import SignUp from './components/signUp/SignUp';
 import { SignIn } from './components/signIn/SignIn';
@@ -12,11 +12,17 @@ export function App() {
   return (
 
     <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/sign-in" element={<SignIn />} />
-      </Routes>
+      <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
+        <Route path="/sign-up">
+          <SignUp />
+        </Route>
+        <Route path="/sign-in">
+          <SignIn />
+        </Route>
+      </Switch>
     </Router>
 
   );

@@ -10,17 +10,20 @@ import { ThemeProvider } from '@mui/material/styles';
 // ============================================== IMPORTS ==============================================
 import { dark } from '../../themes';
 import { FormSignIn } from './Form';
-import { authenticate } from '../../services/users';
+//import { authenticate } from '../../services/users';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { login } from '../../reducers/userReducer';
+//import { useDispatch } from 'react-redux';
+//import { login } from '../../reducers/userReducer';
 import Cookies from 'js-cookie';
 import { API } from '../../services/users';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
+
 
 export function SignIn() {
 
-    const dispatch = useDispatch();
+    //    const dispatch = useDispatch();
+    const history = useHistory();
 
     const [showAlert, setShowAlert] = useState(false);
     const [alert, setAlert] = useState({ caption: '', severity: 'info' })
@@ -47,7 +50,7 @@ export function SignIn() {
                 console.log(res.data)
                 if (res.status === 200) {
                     Cookies.set('token', res.data.response, { secure: true, expires: 1, sameSite: 'strict' })
-                    window.location.replace('/')
+                    history.push('/')
                 }
             })
             .catch((err) => {

@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 
 import { Fragment } from "react"
 
-export const Coin = ({ tier }) => {
+export const Coin = ({ tier, price }) => {
 
     return (
         <Fragment>
@@ -49,10 +49,7 @@ export const Coin = ({ tier }) => {
                             }}
                         >
                             <Typography component="h2" variant="h3" color="text.primary">
-                                ${tier.price}
-                            </Typography>
-                            <Typography variant="h6" color="text.secondary">
-                                /mo
+                                ${price}
                             </Typography>
                         </Box>
                         <ul>

@@ -1,0 +1,35 @@
+#================================================== USERS ==================================================
+#===========================================================================================================
+
+### REGISTER USERS
+POST http://localhost:4000/registerUser
+Content-Type: application/json
+
+{
+    "email":"helmut.na@gmail.com",
+    "password":"contraseña123",
+    "name":"Helmut Najarro"
+}
+
+
+### LOGIN
+POST  http://localhost:4000/login
+Content-Type: application/json
+
+{
+    "email":"helmut.na@gmail.com",
+    "password":"contraseña123"
+}
+
+
+#================================================== CRYPTO =================================================
+#===========================================================================================================
+
+### GET BITCOIN PRICE
+GET  http://localhost:4000/bitcoin
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhlbG11dC5uYUBnbWFpbC5jb20iLCJuYW1lIjoiSGVsbXV0IE5hamFycm8iLCJpYXQiOjE2NTY3NDIzMjIsImV4cCI6MTY1Njc0NTkyMn0.q_mTz7ByGuesN0k5KizdtxewyePIWKVYZe5BRP-7KAw
+
+
+### GET ETHEREUM PRICE
+GET  http://localhost:4000/ethereum
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhlbG11dC5uYUBnbWFpbC5jb20iLCJuYW1lIjoiSGVsbXV0IE5hamFycm8iLCJpYXQiOjE2NTY3NDIzMjIsImV4cCI6MTY1Njc0NTkyMn0.q_mTz7ByGuesN0k5KizdtxewyePIWKVYZe5BRP-7KAw

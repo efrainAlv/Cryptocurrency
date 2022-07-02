@@ -62,11 +62,11 @@ const defaultOptions = (height, max) => {
 
 
 
-export const Lineal = ({ series, width = 300, height = 100, max = 50 }) => {
+export const Lineal = ({ ethereumData, bitcoinData, width = 300, height = 100, max = 50 }) => {
 
     return (
         <Fragment>
-            <Chart options={defaultOptions(height, max)} series={[{ data: series }]} type="line" width={width} />
+            <Chart options={defaultOptions(height, max)} series={[{ data: bitcoinData }, { data: ethereumData }]} type="line" width={width} />
         </Fragment>
     )
 }

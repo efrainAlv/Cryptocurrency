@@ -17,26 +17,91 @@ import { Fragment } from 'react';
 import { CopyRight } from '../Copyright';
 import { dark } from '../../themes';
 import { Lineal } from '../charts/Lineal';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
-const tiers = [
-    {
+
+const API = "http://localhost:4000"
+
+const coins = {
+    bitcoin: {
         title: 'Bitcoin',
         price: '0',
         image: "https://upload.wikimedia.org/wikipedia/commons/5/50/Bitcoin.png",
         buttonText: 'Sign up for free',
         buttonVariant: 'outlined',
     },
-    {
+    ethereum: {
         title: 'Ethereum',
         price: '0',
         image: "https://www.pngall.com/wp-content/uploads/10/Ethereum-Logo-PNG-HD-Image.png",
         buttonText: 'Sign up for free',
         buttonVariant: 'outlined',
     },
-];
+};
+
+export const Home = () => {
+
+    const [bitcoin, setBitcoin] = useState(0);
+    const [ethereum, setEthereum] = useState(0);
 
 
-function PricingContent() {
+    useEffect(() => {
+
+        axios({
+            method: 'get',
+            url: `${API}/bitcoin`,
+            responseType: 'json',
+            responseEncoding: 'utf8',
+            headers: {
+                'Authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhlbG11dC5uYUBnbWFpbC5jb20iLCJuYW1lIjoiSGVsbXV0IE5hamFycm8iLCJpYXQiOjE2NTY3MzY4MjYsImV4cCI6MTY1Njc0MDQyNn0.HHkm4oJFtJz0zB6PC7vmIt6sh2O7fME2opTlEQ2AhxY"
+            }
+        })
+            .then((res) => {
+                if (res.status === 200) {
+                    setBitcoin(Math.round(parseInt(res.data.response[0][2])))
+                }
+                else {
+
+                }
+            })
+            .catch((err) => {
+
+            })
+
+
+    }, [bitcoin]);
+
+
+    useEffect(() => {
+
+        axios({
+            method: 'get',
+            url: `${API}/ethereum`,
+            responseType: 'json',
+            responseEncoding: 'utf8',
+            headers: {
+                'Authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhlbG11dC5uYUBnbWFpbC5jb20iLCJuYW1lIjoiSGVsbXV0IE5hamFycm8iLCJpYXQiOjE2NTY3MzY4MjYsImV4cCI6MTY1Njc0MDQyNn0.HHkm4oJFtJz0zB6PC7vmIt6sh2O7fME2opTlEQ2AhxY"
+            }
+        })
+            .then((res) => {
+                if (res.status === 200) {
+                    setEthereum(Math.round(parseInt(res.data.response[0][2])))
+                }
+                else {
+
+                }
+
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+    }, [ethereum]);
+
+
+
     return (
         <Fragment>
             <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
@@ -110,8 +175,12 @@ function PricingContent() {
 
                             <Lineal
                                 key={Math.random()}
-                                series={[1, 2, 3, 4, 5, 60]} height={window.screen.height * 0.6}
-                                width={window.screen.width * 0.5} > </Lineal>
+                                bitcoinData={[1, 2, 3, 4, 5]}
+                                ethereumData={[5, 4, 3, 2, 1]}
+                                height={window.screen.height * 0.6}
+                                width={window.screen.width * 0.50} >
+                            </Lineal>
+
                         </Box>
                     </Grid>
 
@@ -146,15 +215,10 @@ function PricingContent() {
 
                             <Container maxWidth="md" component="main">
                                 <Grid container spacing={4} alignItems="center">
-                                    {tiers.map((tier) => (
-                                        // Enterprise card is full width at sm breakpoint
-                                        <Coin tier={tier}>
-
-                                        </Coin>
-                                    ))}
+                                    <Coin tier={coins.bitcoin} price={bitcoin} />
+                                    <Coin tier={coins.ethereum} price={ethereum} />
                                 </Grid>
                             </Container>
-
                         </Box>
                     </Grid>
 
@@ -168,8 +232,4 @@ function PricingContent() {
 
         </Fragment>
     );
-}
-
-export function Home() {
-    return <PricingContent />;
 }

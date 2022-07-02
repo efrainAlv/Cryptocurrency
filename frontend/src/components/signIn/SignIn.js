@@ -15,7 +15,8 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../reducers/userReducer';
 import Cookies from 'js-cookie';
-
+import { API } from '../../services/users';
+import axios from 'axios';
 
 export function SignIn() {
 
@@ -29,14 +30,25 @@ export function SignIn() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
 
-        await authenticate({
-            email: data.get('email'),
-            password: data.get('password'),
+        axios({
+            method: 'post',
+            url: `${API}/login`,
+            responseType: 'json',
+            responseEncoding: 'utf8',
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
+            data: {
+                email: data.get('email'),
+                password: data.get('password'),
+            }
         })
             .then((res) => {
-                dispatch(login(res.response))
-                Cookies.set('token', res.response.response, { secure: true, expires: 1, sameSite: 'strict' })
-                window.location.replace('/')
+                console.log(res.data)
+                if (res.status === 200) {
+                    Cookies.set('token', res.data.response, { secure: true, expires: 1, sameSite: 'strict' })
+                    window.location.replace('/')
+                }
             })
             .catch((err) => {
 

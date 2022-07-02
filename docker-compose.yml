@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+
+  frontend:
+    build: ./frontend
+    image: frontend-crypto
+    container_name: frontend
+    ports:
+      - 8080:80
+    networks:
+      - default
+    #volumes:
+    #  - ./frontend:/usr/src/app
+
+  backend:
+    build: ./backend/functions
+    image: backend-crypto
+    container_name: backend
+    ports:
+      - 8090:4000
+    networks:
+      - default
+    #volumes:
+    #  - ./backend/functions:/usr/src/app
+
+networks:
+  default:
+    name: net
+    driver: bridge

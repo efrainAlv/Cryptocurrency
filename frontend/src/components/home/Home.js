@@ -23,7 +23,7 @@ import Cookies from 'js-cookie';
 import { userReducer } from '../../reducers/userReducer';
 
 
-const API = "http://localhost:4000"
+import { API } from '../../services/users';
 
 var tempBC = []
 var tempTE = []
@@ -61,7 +61,8 @@ export const Home = () => {
             responseType: 'json',
             responseEncoding: 'utf8',
             headers: {
-                'Authorization': Cookies.get("token")
+                'Authorization': Cookies.get("token"),
+                'Access-Control-Allow-Origin': '*'
             }
         })
             .then((res) => {
@@ -84,7 +85,8 @@ export const Home = () => {
             responseType: 'json',
             responseEncoding: 'utf8',
             headers: {
-                'Authorization': Cookies.get("token")
+                'Authorization': Cookies.get("token"),
+                'Access-Control-Allow-Origin': '*'
             }
         })
             .then((res) => {
@@ -106,7 +108,8 @@ export const Home = () => {
             responseType: 'json',
             responseEncoding: 'utf8',
             headers: {
-                'Authorization': Cookies.get("token")
+                'Authorization': Cookies.get("token"),
+                'Access-Control-Allow-Origin': '*'
             }
         })
             .then((res) => {

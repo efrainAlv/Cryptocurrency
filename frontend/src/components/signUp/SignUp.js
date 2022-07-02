@@ -21,6 +21,9 @@ import { useDispatch } from 'react-redux';
 import { Fragment, useState } from 'react';
 import { ActionAlerts } from '../Alert';
 import { CopyRight } from '../Copyright';
+import axios from 'axios';
+import { API } from '../../services/users';
+
 
 export default function SignUp() {
 
@@ -34,34 +37,44 @@ export default function SignUp() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
 
-        await register({
-            name: data.get('name'),
-            email: data.get('email'),
-            password: data.get('password'),
-        }).then((res) => {
-
-            if (res.status === 200) {
-                dispatch(registerUser(res.response))
-                setAlert({
-                    severity: 'success',
-                    caption: 'Registered successfully!'
-                })
-                setShowAlert(true)
+        axios({
+            method: 'post',
+            url: `${API}/registerUser`,
+            responseType: 'json',
+            responseEncoding: 'utf8',
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
+            data: {
+                name: data.get('name'),
+                email: data.get('email'),
+                password: data.get('password'),
             }
-            else {
+        })
+            .then((res) => {
+
+                if (res.status === 200) {
+                    setAlert({
+                        severity: 'success',
+                        caption: 'Registered successfully!'
+                    })
+                    setShowAlert(true)
+                    window.location.replace('/sign-in')
+                }
+                else {
+                    setAlert({
+                        severity: 'error',
+                        caption: res.response
+                    })
+                    setShowAlert(true)
+                }
+            }).catch((err) => {
                 setAlert({
                     severity: 'error',
-                    caption: res.response
+                    caption: 'Emial already registered'
                 })
                 setShowAlert(true)
-            }
-        }).catch((err) => {
-            setAlert({
-                severity: 'error',
-                caption: 'Emial already registered'
             })
-            setShowAlert(true)
-        })
 
     };
 
@@ -146,6 +159,17 @@ export default function SignUp() {
                                 </Grid>
                             </Grid>
                         </Box>
+                    </Box>
+
+                    <Box sx={{ margin: 4 }}>
+                        {
+                            showAlert &&
+                            <ActionAlerts
+                                onClose={() => setShowAlert(false)}
+                                caption={alert.caption}
+                                severity={alert.severity}
+                            />
+                        }
                     </Box>
 
                     <Box>

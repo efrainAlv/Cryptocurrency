@@ -20,9 +20,13 @@ import { Lineal } from '../charts/Lineal';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { userReducer } from '../../reducers/userReducer';
 
 
 const API = "http://localhost:4000"
+
+var tempBC = []
+var tempTE = []
 
 const coins = {
     bitcoin: {
@@ -111,23 +115,25 @@ export const Home = () => {
 
                     if (coin === 'bitcoin') {
 
-                        let temp = bitcoinHistory
+                        tempBC = bitcoinHistory
 
-                        if (temp.length > 7) temp.shift(); temp.shift();
-                        temp.push(parseFloat(res.data.response[0][2]).toFixed(4))
-                        temp.push(parseFloat(res.data.response[0][3]).toFixed(4))
+                        if (tempBC.length > 8) tempBC.shift(); tempBC.shift();
+                        tempBC.push(parseFloat(res.data.response[0][2]).toFixed(4))
+                        tempBC.push(parseFloat(res.data.response[0][3]).toFixed(4))
 
-                        setBitcoinHistory(temp)
+                        setBitcoinHistory(tempBC)
+                        setBitcoinPrice(res.data.response[0][2])
                     }
                     else {
 
-                        let temp = ethereumHistory
+                        tempTE = ethereumHistory
 
-                        if (temp.length > 7) temp.shift(); temp.shift();
-                        temp.push(parseFloat(res.data.response[0][2]).toFixed(4))
-                        temp.push(parseFloat(res.data.response[0][3]).toFixed(4))
+                        if (tempTE.length > 8) tempTE.shift(); tempTE.shift();
+                        tempTE.push(parseFloat(res.data.response[0][2]).toFixed(4))
+                        tempTE.push(parseFloat(res.data.response[0][3]).toFixed(4))
 
-                        setEthereumHistory(temp)
+                        setEthereumHistory(tempTE)
+                        setEthereumPrice(res.data.response[0][2])
                     }
                 }
                 else window.location.replace('/sign-in')
@@ -139,15 +145,15 @@ export const Home = () => {
     }
 
     useEffect(() => {
-        const timerBc = setInterval(() => insertHistory('bitcoin'), 2 * 1000);
-        const timerEt = setInterval(() => insertHistory('ethereum'), 2 * 1000);
+        const timerBc = setInterval(() => insertHistory('bitcoin'), 3 * 1000);
+        const timerEt = setInterval(() => insertHistory('ethereum'), 3 * 1000);
 
         return function cleanup() {
             clearInterval(timerBc);
             clearInterval(timerEt);
         };
-    }, []);
 
+    }, []);
 
     return (
         <Fragment>
@@ -220,6 +226,7 @@ export const Home = () => {
                             </Typography>
 
                             <Lineal
+                                //key={Math.random()}
                                 bitcoin={bitcoinHistory}
                                 ethereum={ethereumHistory}
                                 height={window.screen.height * 0.6}

@@ -14,34 +14,29 @@ import { ThemeProvider } from '@mui/material/styles';
 
 
 import { Fragment } from 'react';
-import { CopyRight } from '../Copyright';
 import { dark } from '../../themes';
-import { Lineal } from '../charts/Lineal';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 //import { userReducer } from '../../reducers/userReducer';
 import { useHistory } from 'react-router-dom';
 import ClipLoader from "react-spinners/ClipLoader";
+import { AreaChart } from '../charts/AreaChart';
 
 import { API } from '../../services/users';
 
-var tempBC = []
-var tempTE = []
 
 const coins = {
     bitcoin: {
         title: 'Bitcoin',
         price: '0',
-        image: "https://upload.wikimedia.org/wikipedia/commons/5/50/Bitcoin.png",
-        buttonText: 'Sign up for free',
+        image: "bit.png",
         buttonVariant: 'outlined',
     },
     ethereum: {
         title: 'Ethereum',
         price: '0',
-        image: "https://www.pngall.com/wp-content/uploads/10/Ethereum-Logo-PNG-HD-Image.png",
-        buttonText: 'Sign up for free',
+        image: "ethe.png",
         buttonVariant: 'outlined',
     },
 };
@@ -53,122 +48,44 @@ export const Home = () => {
     const [bitcoinPrice, setBitcoinPrice] = useState(0);
     const [ethereumPrice, setEthereumPrice] = useState(0);
 
-    const [bitcoinHistory, setBitcoinHistory] = useState([]);
-    const [ethereumHistory, setEthereumHistory] = useState([]);
-
     const [logged, setLogged] = useState(false);
 
-    useEffect(() => {
 
-        axios({
-            method: 'get',
-            url: `${API}/bitcoin`,
-            responseType: 'json',
-            responseEncoding: 'utf8',
-            headers: {
-                'Authorization': Cookies.get("token"),
-                'Access-Control-Allow-Origin': '*'
-            }
-        })
-            .then((res) => {
-                if (res.status === 200) {
-                    setBitcoinPrice(parseFloat(res.data.response[0][2]).toFixed(4))
-                    setLogged(true)
-                }
-                else history.push('/sign-in')
-            })
-            .catch((err) => {
-                history.push('/sign-in')
-                //console.log(err)
-            })
-
-    }, [bitcoinPrice])
 
 
     useEffect(() => {
 
-        axios({
-            method: 'get',
-            url: `${API}/ethereum`,
-            responseType: 'json',
-            responseEncoding: 'utf8',
-            headers: {
-                'Authorization': Cookies.get("token"),
-                'Access-Control-Allow-Origin': '*'
-            }
-        })
-            .then((res) => {
-                if (res.status === 200) {
-                    setEthereumPrice(parseFloat(res.data.response[0][2]).toFixed(4))
-                    setLogged(true)
+        const getPrice = (coin) => {
+
+            axios({
+                method: 'get',
+                url: `${API}/${coin}`,
+                responseType: 'json',
+                responseEncoding: 'utf8',
+                headers: {
+                    'Authorization': Cookies.get("token"),
+                    'Access-Control-Allow-Origin': '*'
                 }
-                else history.push('/sign-in')
             })
-            .catch((err) => {
-                history.push('/sign-in')
-                //console.log(err)
-            })
+                .then((res) => {
 
-    }, [ethereumPrice])
+                    if (res.status === 200) {
 
-
-    const insertHistory = (coin) => {
-        axios({
-            method: 'get',
-            url: `${API}/${coin}`,
-            responseType: 'json',
-            responseEncoding: 'utf8',
-            headers: {
-                'Authorization': Cookies.get("token"),
-                'Access-Control-Allow-Origin': '*'
-            }
-        })
-            .then((res) => {
-
-                if (res.status === 200) {
-
-                    if (coin === 'bitcoin') {
-
-                        tempBC = bitcoinHistory
-
-                        if (tempBC.length > 8) tempBC.shift(); tempBC.shift();
-                        tempBC.push(parseFloat(res.data.response[0][2]).toFixed(4))
-                        tempBC.push(parseFloat(res.data.response[0][3]).toFixed(4))
-
-                        setBitcoinHistory(tempBC)
-                        setBitcoinPrice(res.data.response[0][2])
+                        if (coin === 'bitcoin') setBitcoinPrice(parseFloat(res.data.response[0][2]).toFixed(2))
+                        else setEthereumPrice(parseFloat(res.data.response[0][2]).toFixed(2))
+                        setLogged(true)
                     }
-                    else {
+                    else history.push('/sign-in')
+                })
+                .catch((err) => {
+                    history.push('/sign-in')
+                })
+        }
 
-                        tempTE = ethereumHistory
+        getPrice('bitcoin')
+        getPrice('ethereum')
 
-                        if (tempTE.length > 8) tempTE.shift(); tempTE.shift();
-                        tempTE.push(parseFloat(res.data.response[0][2]).toFixed(4))
-                        tempTE.push(parseFloat(res.data.response[0][3]).toFixed(4))
-
-                        setEthereumHistory(tempTE)
-                        setEthereumPrice(res.data.response[0][2])
-                    }
-                }
-                else history.push('/sign-in')
-            })
-            .catch((err) => {
-                history.push('/sign-in')
-                //console.log(err)
-            })
-    }
-
-    useEffect(() => {
-        const timerBc = setInterval(() => insertHistory('bitcoin'), 3 * 1000);
-        const timerEt = setInterval(() => insertHistory('ethereum'), 3 * 1000);
-
-        return function cleanup() {
-            clearInterval(timerBc);
-            clearInterval(timerEt);
-        };
-
-    }, []);
-
+    }, [history])
 
     return (
 
@@ -234,8 +151,8 @@ export const Home = () => {
                             >
                                 <Box sx={{ padding: 5, marginTop: 2 }}>
                                     <Typography
-                                        component="h1"
-                                        variant="h2"
+                                        component="h3"
+                                        variant="h3"
                                         align="center"
                                         color="text.primary"
                                         gutterBottom
@@ -243,14 +160,10 @@ export const Home = () => {
                                         Pricing History
                                     </Typography>
 
-                                    <Lineal
-                                        //key={Math.random()}
-                                        bitcoin={bitcoinHistory}
-                                        ethereum={ethereumHistory}
-                                        height={window.screen.height * 0.6}
-                                        width={window.screen.width * 0.50} >
-                                    </Lineal>
-
+                                    <AreaChart
+                                        bitcoinInit={[{ x: (new Date()).getTime(), y: bitcoinPrice }]}
+                                        ethereumInit={[{ x: (new Date()).getTime(), y: ethereumPrice }]}
+                                    />
                                 </Box>
                             </Grid>
 
@@ -304,11 +217,6 @@ export const Home = () => {
                         </Box>
                 }
             </ThemeProvider>
-
-
-            {/* Footer */}
-
-            <CopyRight />
 
         </Fragment >
     );

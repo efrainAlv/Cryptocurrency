@@ -64,7 +64,7 @@ export const Coin = ({ tier, price }) => {
                     </CardContent>
                     <CardActions>
                         <Button fullWidth variant={tier.buttonVariant}>
-                            {tier.buttonText}
+                            Consult the API
                         </Button>
                     </CardActions>
                 </Card>

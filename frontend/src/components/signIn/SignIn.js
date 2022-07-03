@@ -47,7 +47,6 @@ export function SignIn() {
             }
         })
             .then((res) => {
-                console.log(res.data)
                 if (res.status === 200) {
                     Cookies.set('token', res.data.response, { secure: true, expires: 1, sameSite: 'strict' })
                     history.push('/')

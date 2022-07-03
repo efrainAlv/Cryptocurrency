@@ -3,6 +3,7 @@ import Stack from '@mui/material/Stack';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 
 import { Fragment, useState } from "react";
@@ -15,7 +16,7 @@ import { API } from '../../services/users';
 import ReactInterval from 'react-interval';
 
 
-export const AreaChart = ({ bitcoinInit = [], ethereumInit = [], width = 300, coin }) => {
+export const AreaChart = ({ bitcoinInit = [], ethereumInit = [], onBitCoinUpdate, onEthereumUpdate }) => {
 
 
     const [options] = useState({
@@ -58,7 +59,14 @@ export const AreaChart = ({ bitcoinInit = [], ethereumInit = [], width = 300, co
                 }
             }
         },
-
+        legend: {
+            show: true,
+            fontSize: '15px',
+            labels: {
+                colors: '#e8e4e3',
+                useSeriesColors: false
+            }
+        },
         stroke: {
             curve: 'straight'
         },
@@ -107,11 +115,13 @@ export const AreaChart = ({ bitcoinInit = [], ethereumInit = [], width = 300, co
 
                         if (bitcoin.length > 20) { bitcoin.shift(); bitcoin.shift(); }
                         setBitcoin([...[...bitcoin, { x: date, y: parseFloat(res.data.response[0][2]) }], { x: date, y: parseFloat(res.data.response[0][3]) }])
+                        onBitCoinUpdate({ lower: parseFloat(res.data.response[0][3]).toFixed(2), higher: parseFloat(res.data.response[0][2]).toFixed(2) });
                     }
                     else {
 
                         if (ethereum.length > 20) { ethereum.shift(); ethereum.shift(); }
                         setEthereum([...[...ethereum, { x: date, y: parseFloat(res.data.response[0][2]) }], { x: date, y: parseFloat(res.data.response[0][3]) }])
+                        onEthereumUpdate({ lower: parseFloat(res.data.response[0][3]).toFixed(2), higher: parseFloat(res.data.response[0][2]).toFixed(2) });
                     }
                 }
                 else history.push('/sign-in')
@@ -146,8 +156,9 @@ export const AreaChart = ({ bitcoinInit = [], ethereumInit = [], width = 300, co
                 width={window.screen.width * 0.50} />
 
             <Box>
-                <Typography gutterBottom> Adjust the refresh rate - SECONDS </Typography>
                 <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
+
+                    <ArrowCircleDownIcon fontSize="large" />
                     <Slider
                         aria-label="Temperature"
                         value={rate}
@@ -160,7 +171,12 @@ export const AreaChart = ({ bitcoinInit = [], ethereumInit = [], width = 300, co
                         min={0}
                         max={60}
                     />
+                    <ArrowCircleUpIcon fontSize="large" />
+
                 </Stack>
+                <Box direction="row" sx={{ mb: 1, textAlign: "center" }} alignItems="center">
+                    <Typography gutterBottom variant="h5"> Adjust the refresh rate - Seconds </Typography>
+                </Box>
             </Box>
 
         </Fragment>

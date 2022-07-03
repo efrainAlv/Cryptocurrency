@@ -8,7 +8,8 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 //import StarIcon from '@mui/icons-material/StarBorder';
 import Typography from '@mui/material/Typography';
-
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { Fragment } from "react"
 
@@ -49,7 +50,7 @@ export const Coin = ({ tier, price }) => {
                             }}
                         >
                             <Typography component="h2" variant="h3" color="text.primary">
-                                ${price}
+                                ${price.higher} <KeyboardArrowUpIcon fontSize='large' color='success' />
                             </Typography>
                         </Box>
                         <ul>
@@ -57,10 +58,23 @@ export const Coin = ({ tier, price }) => {
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="center"
+                                sx={{ marginBottom: 3 }}
                             >
                                 <img alt="alt" src={tier.image} width={tier.title === "Ethereum" ? "32%" : "50%"} />
                             </Box>
                         </ul>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'baseline',
+                                mb: 2
+                            }}
+                        >
+                            <Typography component="h4" variant="h4" color="text.primary">
+                                <KeyboardArrowDownIcon color='error' />  ${price.lower}
+                            </Typography>
+                        </Box>
                     </CardContent>
                     <CardActions>
                         <Button fullWidth variant={tier.buttonVariant}>

@@ -45,8 +45,8 @@ export const Home = () => {
 
     const history = useHistory();
 
-    const [bitcoinPrice, setBitcoinPrice] = useState(0);
-    const [ethereumPrice, setEthereumPrice] = useState(0);
+    const [bitcoinPrice, setBitcoinPrice] = useState({ lower: 0, higher: 0 });
+    const [ethereumPrice, setEthereumPrice] = useState({ lower: 0, higher: 0 });
 
     const [logged, setLogged] = useState(false);
 
@@ -71,8 +71,8 @@ export const Home = () => {
 
                     if (res.status === 200) {
 
-                        if (coin === 'bitcoin') setBitcoinPrice(parseFloat(res.data.response[0][2]).toFixed(2))
-                        else setEthereumPrice(parseFloat(res.data.response[0][2]).toFixed(2))
+                        if (coin === 'bitcoin') setBitcoinPrice({ lower: parseFloat(res.data.response[0][3]).toFixed(2), higher: parseFloat(res.data.response[0][2]).toFixed(2) })
+                        else setEthereumPrice({ lower: parseFloat(res.data.response[0][3]).toFixed(2), higher: parseFloat(res.data.response[0][2]).toFixed(2) })
                         setLogged(true)
                     }
                     else history.push('/sign-in')
@@ -161,8 +161,10 @@ export const Home = () => {
                                     </Typography>
 
                                     <AreaChart
-                                        bitcoinInit={[{ x: (new Date()).getTime(), y: bitcoinPrice }]}
-                                        ethereumInit={[{ x: (new Date()).getTime(), y: ethereumPrice }]}
+                                        bitcoinInit={[{ x: (new Date()).getTime(), y: bitcoinPrice.higher }]}
+                                        ethereumInit={[{ x: (new Date()).getTime(), y: ethereumPrice.higher }]}
+                                        onBitCoinUpdate={(value) => setBitcoinPrice(value)}
+                                        onEthereumUpdate={(value) => { setEthereumPrice(value) }}
                                     />
                                 </Box>
                             </Grid>

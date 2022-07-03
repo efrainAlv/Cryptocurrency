@@ -4,14 +4,15 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { ThemeProvider } from '@mui/material/styles';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import { Paper } from '@mui/material';
+
 
 // ============================================== IMPORTS ==============================================
 import { dark } from '../../themes';
@@ -82,103 +83,121 @@ export default function SignUp() {
     return (
 
         <Fragment>
+            <Box direction="row" sx={{ mb: 1, textAlign: "left" }} alignItems="center">
+                <Typography gutterBottom component="h3" variant="h3">
+                    <MonetizationOnIcon fontSize='large' color='danger' /> Cryptocurrency
+                </Typography>
+            </Box>
 
-            <ThemeProvider theme={dark}>
+            <Paper
+                sm={4}
+                md={7}
+                sx={{
+                    //backgroundImage: `url(${Image})`,
+                    backgroundImage: 'url(background.jpg)',
+                    backgroundRepeat: 'no-repeat',
+                    //backgroundColor: (t) =>
+                    //    t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    height: window.screen.height * 0.6
+                }}
+            >
 
-                <Container component="main" maxWidth="xs">
+                <Box sx={{ height: window.screen.height * 0.6 }}>
 
-                    <CssBaseline />
+                    <ThemeProvider theme={dark}>
+                        <Container component="main" maxWidth="xs" sx={{ paddingTop: 0.5, height: window.screen.height * 0.6, backgroundColor: "#121212" }}>
+                            <CssBaseline />
 
-                    <Box
-                        sx={{
-                            marginTop: 8,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            {/*<LockOutlinedIcon />*/}
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Sign up
-                        </Typography>
-                        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12} sm={12}>
-                                    <TextField
-                                        autoComplete="given-name"
-                                        name="name"
-                                        required
-                                        fullWidth
-                                        id="name"
-                                        label="Full Name"
-                                        autoFocus
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        id="email"
-                                        label="Email Address"
-                                        name="email"
-                                        autoComplete="email"
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        name="password"
-                                        label="Password"
-                                        type="password"
-                                        id="password"
-                                        autoComplete="new-password"
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <FormControlLabel
-                                        control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                        label="I want to receive inspiration, marketing promotions and updates via email."
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
+                            <Box
+                                sx={{
+                                    marginTop: 8,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                }}
                             >
-                                Sign Up
-                            </Button>
-                            <Grid container justifyContent="center">
-                                <Grid item>
-                                    <Link sx={{ cursor: "pointer" }} variant="body2" onClick={() => history.push('sign-in')}>
-                                        Already have an account? Sign in
-                                    </Link>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Box>
+                                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                                    {/*<LockOutlinedIcon />*/}
+                                </Avatar>
+                                <Typography component="h1" variant="h5" color={"#fff"} >
+                                    Sign up
+                                </Typography>
+                                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={12} sm={12}>
+                                            <TextField
+                                                autoComplete="given-name"
+                                                name="name"
+                                                required
+                                                fullWidth
+                                                id="name"
+                                                label="Full Name"
+                                                autoFocus
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                required
+                                                fullWidth
+                                                id="email"
+                                                label="Email Address"
+                                                name="email"
+                                                autoComplete="email"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                required
+                                                fullWidth
+                                                name="password"
+                                                label="Password"
+                                                type="password"
+                                                id="password"
+                                                autoComplete="new-password"
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Button
+                                        type="submit"
+                                        fullWidth
+                                        variant="contained"
+                                        sx={{ mt: 3, mb: 2 }}
+                                    >
+                                        Sign Up
+                                    </Button>
+                                    <Grid container justifyContent="center">
+                                        <Grid item>
+                                            <Link sx={{ cursor: "pointer" }} variant="body2" onClick={() => history.push('sign-in')}>
+                                                Already have an account? Sign in
+                                            </Link>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                            </Box>
 
-                    <Box sx={{ margin: 4 }}>
-                        {
-                            showAlert &&
-                            <ActionAlerts
-                                onClose={() => setShowAlert(false)}
-                                caption={alert.caption}
-                                severity={alert.severity}
-                            />
-                        }
-                    </Box>
+                            <Box sx={{ margin: 4 }}>
+                                {
+                                    showAlert &&
+                                    <ActionAlerts
+                                        onClose={() => setShowAlert(false)}
+                                        caption={alert.caption}
+                                        severity={alert.severity}
+                                    />
+                                }
+                            </Box>
 
-                    <Box>
-                        <CopyRight />
-                    </Box>
-                </Container>
-            </ThemeProvider>
-        </Fragment>
+                            <Box>
+                                <CopyRight />
+                            </Box>
+
+                        </Container>
+                    </ThemeProvider>
+
+                </Box>
+            </Paper>
+        </Fragment >
 
 
     );

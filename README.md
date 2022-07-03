@@ -49,7 +49,7 @@ Utilizada para la autenticación de usuarios. Es importante que se identifiquen 
 
 ### Home
 
-Este Dashboard muestra los precios en dolares del BitCoin y Ethereum en la parte derecha. En la parte izquierda se muestra una grafica que va comparando los precios altos y bajos de cada criptomoneda. El Dahsboard tiene una taza de actualizacion de aproximadamente 3 segundos.
+Este Dashboard muestra los precios en dolares más altos y más bajos del BitCoin y Ethereum en la parte derecha. En la parte izquierda se muestra una grafica que va comparando los precios altos y bajos de cada criptomoneda. El Dahsboard tiene un slider que ajusta la tasa de refresco de los precios. La tasa de refresco va de 0 hasta 60 segundos.
 
 ![alt](./images/home.png)
 
